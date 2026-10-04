@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en-au">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Mandi House – Slow Food / Loud Flavour{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍛</text></svg>">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="{% url 'menu:home' %}" class="brand">Mandi <span>House.</span></a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">&#9776;</button>
+  <div class="nav-links" id="navLinks">
+    <a href="{% url 'menu:home' %}">Home</a>
+    <a href="{% url 'menu:menu_list' %}">Menu</a>
+    <a href="{% url 'menu:deals_list' %}">Deals</a>
+    <a href="{% url 'bookings:reserve_table' %}">Reserve a Table</a>
+    <a href="{% url 'menu:about' %}">Visit</a>
+    <a href="{% url 'orders:cart_detail' %}">🛒 Cart
+      {% if cart_item_count > 0 %}<span class="cart-badge">{{ cart_item_count }}</span>{% endif %}
+    </a>
+    <a href="{% url 'orders:my_orders' %}">My Orders</a>
+    {% if user.is_staff %}
+      <a href="{% url 'dashboard:home' %}">Staff Panel</a>
+    {% endif %}
+  </div>
+</nav>
+
+<div class="container" style="padding-top:24px;">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+{% block content %}{% endblock %}
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">Mandi<br><em>House.</em></div>
+    <div class="footer-links">
+      <a href="{% url 'menu:menu_list' %}">Menu</a>
+      <a href="{% url 'menu:about' %}">Our fire</a>
+      <a href="{% url 'menu:about' %}">Visit</a>
+      <a href="{% url 'bookings:reserve_table' %}">Reserve a table</a>
+      <a href="tel:{{ RESTAURANT_PHONE|default:'' }}">Call us</a>
+      <a href="#top">Back to top ↑</a>
+    </div>
+    <hr class="footer-rule">
+    <div class="footer-bottom">
+      <span>Rice, smoke &amp; good company — {% now "Y" %}</span>
+      <span>Mandi House · {{ RESTAURANT_ADDRESS|default:"Sydney, Australia" }}</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Chatbot widget -->
+<button id="chatbot-toggle" title="Chat with us">💬</button>
+<div id="chatbot-window">
+  <div id="chatbot-header">Mandi House Assistant</div>
+  <div id="chatbot-messages">
+    <div class="chat-msg bot">Hi! Ask me about our menu, deals, hours, or how ordering works.</div>
+  </div>
+  <div id="chatbot-input-row">
+    <input type="text" id="chatbot-input" placeholder="Type a message...">
+    <button id="chatbot-send">Send</button>
+  </div>
+</div>
+
+<script>
+document.getElementById('navToggle').addEventListener('click', function(){
+  document.getElementById('navLinks').classList.toggle('open');
+});
+</script>
+<script src="{% static 'js/chatbot.js' %}"></script>
+<script src="{% static 'js/tilt.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

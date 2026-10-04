@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dash-wrap">
+  <div class="dash-sidebar">
+    <a href="{% url 'dashboard:home' %}" class="{% if active == 'home' %}active{% endif %}">🏠 Dashboard</a>
+    <a href="{% url 'dashboard:orders_list' %}" class="{% if active == 'orders' %}active{% endif %}">🧾 Orders</a>
+    <a href="{% url 'dashboard:bookings_list' %}" class="{% if active == 'bookings' %}active{% endif %}">📅 Table Bookings</a>
+    {% if user.is_superuser %}
+    <a href="{% url 'dashboard:dishes_list' %}" class="{% if active == 'dishes' %}active{% endif %}">🍛 Dishes</a>
+    <a href="{% url 'dashboard:categories_list' %}" class="{% if active == 'categories' %}active{% endif %}">🗂️ Categories</a>
+    <a href="{% url 'dashboard:deals_list' %}" class="{% if active == 'deals' %}active{% endif %}">🎉 Deals</a>
+    <a href="{% url 'dashboard:opening_hours' %}" class="{% if active == 'hours' %}active{% endif %}">🕐 Opening Hours</a>
+    <a href="{% url 'dashboard:staff_list' %}" class="{% if active == 'staff' %}active{% endif %}">👥 Staff Accounts</a>
+    {% endif %}
+    <a href="{% url 'dashboard:logout' %}">🚪 Log Out</a>
+  </div>
+  <div class="dash-main">
+    {% block dash_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

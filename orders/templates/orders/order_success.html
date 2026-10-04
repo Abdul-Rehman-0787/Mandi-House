@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Order Received – Mandi 1{% endblock %}
+{% block content %}
+<section class="section container" style="max-width:560px;text-align:center;">
+  <h1 style="color:#e8590c;">🎉 Order Received!</h1>
+  <p style="font-size:1.1rem;">Thank you, {{ order.customer_name }}! Your order <strong>#{{ order.pk }}</strong>
+  has been received.</p>
+  <p>Our team will call you at <strong>{{ order.customer_phone }}</strong> shortly to confirm the
+  details before it's prepared. Please keep your phone nearby.</p>
+  <p style="color:#6b5d4f;">Questions? Call us at {{ restaurant_phone }}.</p>
+  <a href="{% url 'menu:menu_list' %}" class="btn">Back to Menu</a>
+</section>
+{% endblock %}

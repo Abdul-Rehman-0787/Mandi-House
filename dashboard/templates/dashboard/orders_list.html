@@ -1,0 +1,27 @@
+{% extends "dashboard/dash_base.html" %}
+{% block title %}Orders – Mandi 1{% endblock %}
+{% block dash_content %}
+<h1 style="color:#c94a09;">Orders</h1>
+<div class="chip-row" style="justify-content:flex-start;">
+  <a class="chip {% if not status %}active{% endif %}" href="{% url 'dashboard:orders_list' %}">All</a>
+  {% for value, label in statuses %}
+    <a class="chip {% if status == value %}active{% endif %}" href="?status={{ value }}">{{ label }}</a>
+  {% endfor %}
+</div>
+<table class="dash-table">
+  <tr><th>Order</th><th>Customer</th><th>Phone</th><th>Total</th><th>Placed</th><th>Status</th><th></th></tr>
+  {% for order in orders %}
+  <tr>
+    <td>#{{ order.pk }}</td>
+    <td>{{ order.customer_name }}</td>
+    <td>{{ order.customer_phone }}</td>
+    <td>${{ order.total }}</td>
+    <td>{{ order.created_at|date:"d M, H:i" }}</td>
+    <td><span class="status-pill status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+    <td><a href="{% url 'dashboard:order_detail' order.pk %}" class="btn btn-small">Open</a></td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="7">No orders found.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

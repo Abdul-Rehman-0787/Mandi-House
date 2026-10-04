@@ -1,0 +1,29 @@
+{% extends "dashboard/dash_base.html" %}
+{% block title %}Dishes – Mandi 1{% endblock %}
+{% block dash_content %}
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+  <h1 style="color:#c94a09;">Dishes</h1>
+  <a href="{% url 'dashboard:dish_add' %}" class="btn">➕ Add New Dish</a>
+</div>
+<table class="dash-table">
+  <tr><th>Name</th><th>Category</th><th>Price</th><th>Discount</th><th>Stock</th><th>Active</th><th></th></tr>
+  {% for dish in dishes %}
+  <tr>
+    <td>{{ dish.name }}</td>
+    <td>{{ dish.category.name }}</td>
+    <td>${{ dish.final_price }}{% if dish.has_discount %} <span style="text-decoration:line-through;color:#999;">${{ dish.price }}</span>{% endif %}</td>
+    <td>{{ dish.discount_percent }}%</td>
+    <td>{% if dish.quantity_available == 0 %}<span class="badge badge-out">Sold Out</span>{% else %}{{ dish.quantity_available }}{% endif %}</td>
+    <td>{% if dish.is_active %}✅{% else %}🚫{% endif %}</td>
+    <td style="display:flex;gap:8px;">
+      <a href="{% url 'dashboard:dish_edit' dish.pk %}" class="btn btn-small">✏️ Edit</a>
+      <form method="post" action="{% url 'dashboard:dish_delete' dish.pk %}" onsubmit="return confirm('Delete {{ dish.name }}?');">
+        {% csrf_token %}<button class="btn btn-small btn-danger">🗑️ Delete</button>
+      </form>
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="7">No dishes yet — add your first one!</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

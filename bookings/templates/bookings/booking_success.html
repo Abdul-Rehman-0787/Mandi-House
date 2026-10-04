@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Booking Received – Mandi 1{% endblock %}
+{% block content %}
+<section class="section container" style="max-width:560px;text-align:center;">
+  <h1 style="color:var(--gold);">🔥 Your corner is being saved!</h1>
+  <p style="font-size:1.1rem;">Thanks, {{ booking.customer_name }} — we've noted a table for
+  <strong>{{ booking.party_size }}</strong> on <strong>{{ booking.booking_date|date:"l, d M Y" }}</strong>
+  at <strong>{{ booking.booking_time|time:"g:i A" }}</strong>.</p>
+  <p>Our team will call <strong>{{ booking.customer_phone }}</strong> shortly to confirm.</p>
+  <a href="{% url 'menu:home' %}" class="btn tilt-btn">Back to Home</a>
+</section>
+{% endblock %}

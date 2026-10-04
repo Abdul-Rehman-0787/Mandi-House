@@ -1,0 +1,35 @@
+{% extends "dashboard/dash_base.html" %}
+{% block title %}Order #{{ order.pk }} – Mandi 1{% endblock %}
+{% block dash_content %}
+<a href="{% url 'dashboard:orders_list' %}">&larr; Back to Orders</a>
+<h1 style="color:#c94a09;">Order #{{ order.pk }}</h1>
+<p><span class="status-pill status-{{ order.status }}">{{ order.get_status_display }}</span></p>
+
+<div style="background:#fff;padding:20px;border-radius:14px;box-shadow:var(--shadow);margin-bottom:20px;">
+  <p><strong>Customer:</strong> {{ order.customer_name }}</p>
+  <p><strong>Phone:</strong> <a href="tel:{{ order.customer_phone }}">{{ order.customer_phone }}</a> — call to confirm this order</p>
+  {% if order.customer_email %}<p><strong>Email:</strong> {{ order.customer_email }}</p>{% endif %}
+  {% if order.notes %}<p><strong>Notes:</strong> {{ order.notes }}</p>{% endif %}
+  <p><strong>Placed:</strong> {{ order.created_at|date:"d M Y, H:i" }} (Sydney time)</p>
+</div>
+
+<table class="dash-table" style="margin-bottom:20px;">
+  <tr><th>Item</th><th>Qty</th><th>Unit Price</th><th>Line Total</th></tr>
+  {% for item in order.items.all %}
+  <tr><td>{{ item.item_name }}</td><td>{{ item.quantity }}</td><td>${{ item.unit_price }}</td><td>${{ item.line_total }}</td></tr>
+  {% endfor %}
+  <tr><td colspan="3" style="text-align:right;font-weight:800;">Total</td><td style="font-weight:800;">${{ order.total }}</td></tr>
+</table>
+
+<div style="display:flex;gap:12px;flex-wrap:wrap;">
+  <form method="post" action="{% url 'dashboard:order_set_status' order.pk 'confirmed' %}">
+    {% csrf_token %}<button class="btn">✅ Confirm Order</button>
+  </form>
+  <form method="post" action="{% url 'dashboard:order_set_status' order.pk 'completed' %}">
+    {% csrf_token %}<button class="btn btn-yellow">📦 Mark Completed</button>
+  </form>
+  <form method="post" action="{% url 'dashboard:order_set_status' order.pk 'cancelled' %}">
+    {% csrf_token %}<button class="btn btn-danger">❌ Cancel Order</button>
+  </form>
+</div>
+{% endblock %}

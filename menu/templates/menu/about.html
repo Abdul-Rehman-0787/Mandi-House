@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Visit – Mandi House{% endblock %}
+{% block content %}
+<section class="section container" style="max-width:720px;">
+  <p class="section-eyebrow">05 — Find Us</p>
+  <h1 class="serif" style="font-size:2.6rem;margin:0 0 18px;">A warm <em style="color:var(--rust);">corner.</em></h1>
+  <p style="font-size:1.1rem;color:var(--gray);line-height:1.6;">
+    Just off the night market, where the street gets loud and the kitchen windows
+    stay open. Come hungry.
+  </p>
+  <a href="{% url 'bookings:reserve_table' %}" class="btn btn-rust tilt-btn" style="margin:24px 0 40px;">Book your corner →</a>
+
+  <hr style="border:none;border-top:1px solid rgba(164,71,46,0.2);margin:0 0 24px;">
+  <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;padding:18px 0;border-bottom:1px solid rgba(164,71,46,0.2);">
+    <span class="section-eyebrow" style="margin:0;">Address</span>
+    <span style="text-align:right;">{{ RESTAURANT_ADDRESS }}</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;padding:18px 0;border-bottom:1px solid rgba(164,71,46,0.2);">
+    <span class="section-eyebrow" style="margin:0;">Hours</span>
+    <span style="text-align:right;">Tue – Sun / 5:30 pm – 11:00 pm<br>Kitchen closes at 10:15</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;padding:18px 0;">
+    <span class="section-eyebrow" style="margin:0;">Phone</span>
+    <span style="text-align:right;"><a href="tel:{{ RESTAURANT_PHONE }}">{{ RESTAURANT_PHONE }}</a></span>
+  </div>
+</section>
+{% endblock %}

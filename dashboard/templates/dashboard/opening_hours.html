@@ -1,0 +1,26 @@
+{% extends "dashboard/dash_base.html" %}
+{% block title %}Opening Hours – Mandi 1{% endblock %}
+{% block dash_content %}
+<h1 style="color:#c94a09;">Opening Hours</h1>
+<p style="color:#6b5d4f;">These hours control what customers see on the "Reserve a Table" page
+and which times they're allowed to book.</p>
+<div style="background:#fff;padding:24px;border-radius:14px;box-shadow:var(--shadow);max-width:700px;">
+  <form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table class="dash-table">
+      <tr><th>Day</th><th>Open?</th><th>Opens</th><th>Closes</th><th>Last Seating</th></tr>
+      {% for day_name, form in forms_with_days %}
+      <tr>
+        <td><strong>{{ day_name }}</strong>{{ form.id }}</td>
+        <td>{{ form.is_open }}</td>
+        <td>{{ form.open_time }}</td>
+        <td>{{ form.close_time }}</td>
+        <td>{{ form.last_seating_time }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <button type="submit" class="btn btn-block" style="margin-top:16px;">💾 Save Hours</button>
+  </form>
+</div>
+{% endblock %}

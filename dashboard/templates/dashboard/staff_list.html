@@ -1,0 +1,36 @@
+{% extends "dashboard/dash_base.html" %}
+{% block title %}Staff Accounts – Mandi 1{% endblock %}
+{% block dash_content %}
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+  <h1 style="color:#c94a09;">Staff Accounts</h1>
+  <a href="{% url 'dashboard:staff_add' %}" class="btn">➕ Add Staff Login</a>
+</div>
+<p style="color:#6b5d4f;">Staff accounts can view orders and update their status
+(confirm, mark completed, or cancel). They cannot change the menu, prices, or deals.
+Give each staff member their own Login ID and password, and share this page's web
+address with them directly — it isn't shown anywhere on the public website.</p>
+
+<table class="dash-table">
+  <tr><th>Name</th><th>Login ID</th><th>Status</th><th></th></tr>
+  {% for s in staff_users %}
+  <tr>
+    <td>{{ s.first_name|default:"—" }}</td>
+    <td>{{ s.username }}</td>
+    <td>{% if s.is_active %}✅ Active{% else %}🚫 Disabled{% endif %}</td>
+    <td style="display:flex;gap:8px;">
+      <form method="post" action="{% url 'dashboard:staff_toggle_active' s.pk %}">
+        {% csrf_token %}
+        <button class="btn btn-small {% if s.is_active %}btn-outline{% endif %}">
+          {% if s.is_active %}Disable{% else %}Enable{% endif %}
+        </button>
+      </form>
+      <form method="post" action="{% url 'dashboard:staff_delete' s.pk %}" onsubmit="return confirm('Remove login for {{ s.first_name|default:s.username }}?');">
+        {% csrf_token %}<button class="btn btn-small btn-danger">🗑️ Remove</button>
+      </form>
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="4">No staff accounts yet — add your first one!</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

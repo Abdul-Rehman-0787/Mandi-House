@@ -1,0 +1,26 @@
+{% extends "dashboard/dash_base.html" %}
+{% block title %}Add Staff Login – Mandi 1{% endblock %}
+{% block dash_content %}
+<a href="{% url 'dashboard:staff_list' %}">&larr; Back to Staff Accounts</a>
+<h1 style="color:#c94a09;">Add a Staff Login</h1>
+<div style="background:#fff;padding:24px;border-radius:14px;box-shadow:var(--shadow);max-width:480px;">
+  <form method="post">
+    {% csrf_token %}
+    <label>{{ form.full_name.label }}</label>
+    {{ form.full_name }}
+    {{ form.full_name.errors }}
+
+    <label>{{ form.username.label }}</label>
+    {{ form.username }}
+    <p style="color:#8a7a68;font-size:.85rem;margin-top:-10px;">{{ form.username.help_text }}</p>
+    {{ form.username.errors }}
+
+    <label>{{ form.password.label }}</label>
+    {{ form.password }}
+    <p style="color:#8a7a68;font-size:.85rem;margin-top:-10px;">{{ form.password.help_text }}</p>
+    {{ form.password.errors }}
+
+    <button type="submit" class="btn btn-block" style="margin-top:10px;">💾 Create Staff Login</button>
+  </form>
+</div>
+{% endblock %}

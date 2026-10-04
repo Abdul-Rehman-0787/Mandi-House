@@ -1,0 +1,22 @@
+{% extends "dashboard/dash_base.html" %}
+{% block title %}{{ title }} – Mandi 1{% endblock %}
+{% block dash_content %}
+<a href="{% url 'dashboard:dishes_list' %}">&larr; Back to Dishes</a>
+<h1 style="color:#c94a09;">{{ title }}</h1>
+<div style="background:#fff;padding:24px;border-radius:14px;box-shadow:var(--shadow);max-width:560px;">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>Category</label>{{ form.category }}
+    <label>Dish Name</label>{{ form.name }}
+    <label>Description</label>{{ form.description }}
+    <label>Photo</label>{{ form.image }}
+    {% if dish.image %}<img src="{{ dish.image.url }}" style="max-width:160px;border-radius:10px;margin-bottom:14px;">{% endif %}
+    <label>Price ($ AUD)</label>{{ form.price }}
+    <label>Discount (%) — set 0 for no sale</label>{{ form.discount_percent }}
+    <label>Quantity Available Today</label>{{ form.quantity_available }}
+    <label style="display:flex;align-items:center;gap:10px;">{{ form.is_active }} Show this dish on the website</label>
+    <label style="display:flex;align-items:center;gap:10px;">{{ form.is_featured }} Feature on homepage (Chef's Picks)</label>
+    <button type="submit" class="btn btn-block" style="margin-top:10px;">💾 Save Dish</button>
+  </form>
+</div>
+{% endblock %}

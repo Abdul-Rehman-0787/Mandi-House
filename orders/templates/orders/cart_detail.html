@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Your Cart – Mandi 1{% endblock %}
+{% block content %}
+<section class="section container" style="max-width:700px;">
+  <h2 class="section-title">Your Cart</h2>
+  {% if cart.is_empty %}
+    <p class="section-sub">Your cart is empty.</p>
+    <a href="{% url 'menu:menu_list' %}" class="btn">Browse Menu</a>
+  {% else %}
+    {% for item in cart %}
+      <div class="cart-item">
+        <div>
+          <strong>{{ item.name }}</strong><br>
+          <span style="color:#6b5d4f;">${{ item.price }} each</span>
+        </div>
+        <form method="post" action="{% url 'orders:update_cart_item' item.kind item.id %}" style="display:flex;gap:8px;align-items:center;">
+          {% csrf_token %}
+          <input type="number" name="quantity" value="{{ item.qty }}" min="1" class="qty-input">
+          <button type="submit" class="btn btn-small btn-outline">Update</button>
+        </form>
+        <div style="font-weight:800;">${{ item.qty|floatformat:0 }} x ${{ item.price }}</div>
+        <form method="post" action="{% url 'orders:remove_from_cart' item.kind item.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-small btn-danger">Remove</button>
+        </form>
+      </div>
+    {% endfor %}
+    <div class="cart-total">Total: ${{ cart.total }} AUD</div>
+    <a href="{% url 'orders:checkout' %}" class="btn btn-block" style="font-size:1.1rem;padding:16px;">Confirm Order</a>
+    <p style="text-align:center;color:#6b5d4f;margin-top:10px;">
+      💵 Pay on pickup — online payment and delivery are not available yet.
+    </p>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "dashboard/dash_base.html" %}
+{% block title %}Categories – Mandi 1{% endblock %}
+{% block dash_content %}
+<h1 style="color:#c94a09;">Categories</h1>
+<div style="display:flex;gap:30px;flex-wrap:wrap;">
+  <table class="dash-table" style="flex:1;min-width:260px;">
+    <tr><th>Name</th><th>Order</th></tr>
+    {% for c in categories %}
+    <tr><td>{{ c.name }}</td><td>{{ c.order }}</td></tr>
+    {% empty %}
+    <tr><td colspan="2">No categories yet.</td></tr>
+    {% endfor %}
+  </table>
+  <div style="background:#fff;padding:22px;border-radius:14px;box-shadow:var(--shadow);min-width:260px;">
+    <h3>Add New Category</h3>
+    <form method="post">
+      {% csrf_token %}
+      <label>Category Name</label>{{ form.name }}
+      <label>Display Order (lower shows first)</label>{{ form.order }}
+      <button type="submit" class="btn btn-block">➕ Add Category</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "dashboard/dash_base.html" %}
+{% block title %}Booking #{{ booking.pk }} – Mandi 1{% endblock %}
+{% block dash_content %}
+<a href="{% url 'dashboard:bookings_list' %}">&larr; Back to Bookings</a>
+<h1 style="color:#c94a09;">Booking #{{ booking.pk }}</h1>
+<p><span class="status-pill status-{{ booking.status }}">{{ booking.get_status_display }}</span></p>
+<div style="background:#fff;padding:20px;border-radius:14px;box-shadow:var(--shadow);margin-bottom:20px;">
+  <p><strong>Name:</strong> {{ booking.customer_name }}</p>
+  <p><strong>Phone:</strong> <a href="tel:{{ booking.customer_phone }}">{{ booking.customer_phone }}</a> — call to confirm</p>
+  <p><strong>Party Size:</strong> {{ booking.party_size }}</p>
+  <p><strong>Date & Time:</strong> {{ booking.booking_date|date:"l, d M Y" }} at {{ booking.booking_time|time:"g:i A" }}</p>
+  {% if booking.notes %}<p><strong>Notes:</strong> {{ booking.notes }}</p>{% endif %}
+</div>
+<div style="display:flex;gap:12px;flex-wrap:wrap;">
+  <form method="post" action="{% url 'dashboard:booking_set_status' booking.pk 'confirmed' %}">
+    {% csrf_token %}<button class="btn">✅ Confirm Booking</button>
+  </form>
+  <form method="post" action="{% url 'dashboard:booking_set_status' booking.pk 'completed' %}">
+    {% csrf_token %}<button class="btn btn-yellow">🍽️ Mark Completed</button>
+  </form>
+  <form method="post" action="{% url 'dashboard:booking_set_status' booking.pk 'cancelled' %}">
+    {% csrf_token %}<button class="btn btn-danger">❌ Cancel Booking</button>
+  </form>
+</div>
+{% endblock %}

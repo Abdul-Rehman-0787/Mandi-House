@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Deals – Mandi House{% endblock %}
+{% block content %}
+<section class="hero hero-small">
+  <p class="eyebrow">03 — Hot Deals</p>
+  <h1>Good food. <em>Better price.</em></h1>
+</section>
+<section class="section container">
+  {% if not deals %}<p class="section-sub">No active deals right now — check back soon!</p>{% endif %}
+  <div class="grid">
+    {% for deal in deals %}
+      <div class="card tilt-card">
+        <div class="card-top"><span>DEAL</span><span class="num">{{ forloop.counter|stringformat:"02d" }}</span></div>
+        <div class="card-img">
+          {% if deal.image %}
+            <img src="{{ deal.image.url }}" alt="{{ deal.title }}" style="height:100%;width:100%;object-fit:cover;">
+          {% else %}
+            <div class="plate-badge"><div class="plate-ring"><div class="plate-inner">
+              <span style="width:16px;height:16px;top:26px;left:24px;"></span>
+              <span style="width:16px;height:16px;top:26px;left:58px;"></span>
+            </div></div></div>
+          {% endif %}
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">{{ deal.title }}</h3>
+          <p class="card-desc">{{ deal.description }}</p>
+          <div class="price-row"><span class="price">${{ deal.deal_price }}</span></div>
+          <form method="post" action="{% url 'orders:add_to_cart' 'deal' deal.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'menu:deals_list' %}">
+            <button type="submit" class="btn btn-yellow btn-block tilt-btn">Add to Cart</button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

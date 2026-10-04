@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}My Bookings – Mandi 1{% endblock %}
+{% block content %}
+<section class="section container" style="max-width:700px;">
+  <h2 class="section-title">My Table Bookings</h2>
+  {% if bookings %}
+    {% for b in bookings %}
+      <div class="cart-item" style="flex-direction:column;align-items:flex-start;">
+        <div style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:8px;">
+          <strong>Table for {{ b.party_size }}</strong>
+          <span class="status-pill status-{{ b.status }}">{{ b.get_status_display }}</span>
+        </div>
+        <div style="color:var(--gray);">{{ b.booking_date|date:"d M Y" }} at {{ b.booking_time|time:"g:i A" }}</div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="section-sub">No bookings found on this device yet.</p>
+  {% endif %}
+
+  <div class="booking-card" style="margin-top:30px;">
+    <h3 class="section-eyebrow">Using a different device?</h3>
+    <form method="get" style="display:flex;gap:10px;flex-wrap:wrap;">
+      <input type="text" name="phone" value="{{ phone }}" placeholder="+61 4xx xxx xxx" class="form-control" style="flex:1;min-width:200px;margin-bottom:0;">
+      <button type="submit" class="btn tilt-btn">Find My Bookings</button>
+    </form>
+    {% if phone %}
+      {% if phone_lookup_results %}
+        {% for b in phone_lookup_results %}
+          <div class="cart-item" style="flex-direction:column;align-items:flex-start;margin-top:14px;">
+            <div style="display:flex;justify-content:space-between;width:100%;">
+              <strong>Table for {{ b.party_size }}</strong>
+              <span class="status-pill status-{{ b.status }}">{{ b.get_status_display }}</span>
+            </div>
+            <div style="color:var(--gray);">{{ b.booking_date|date:"d M Y" }} at {{ b.booking_time|time:"g:i A" }}</div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="section-sub">No bookings found for that phone number.</p>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

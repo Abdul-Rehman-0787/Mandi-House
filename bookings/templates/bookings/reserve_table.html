@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Reserve a Table – Mandi 1{% endblock %}
+{% block content %}
+<section class="hero hero-small">
+  <p class="eyebrow">05 — Book Your Corner</p>
+  <h1>Reserve <em>a table.</em></h1>
+  <p>Tell us when you're coming and how many. Our team will call you to lock it in
+  — no online payment needed.</p>
+</section>
+
+<section class="section container">
+  <div class="reserve-grid">
+
+    <div class="schedule-card">
+      <h3 class="section-eyebrow">Our Hours</h3>
+      <!-- Owner can edit these hours from the Staff Dashboard → Opening Hours -->
+      <table class="hours-table">
+        {% for day in schedule %}
+        <tr class="{% if not day.is_open %}closed-row{% endif %}">
+          <td>{{ day.get_day_of_week_display }}</td>
+          <td>
+            {% if day.is_open %}
+              {{ day.open_time|time:"g:i A" }} – {{ day.close_time|time:"g:i A" }}
+              <span class="hours-note">(last table {{ day.last_seating_time|time:"g:i A" }})</span>
+            {% else %}
+              Closed
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      <p class="hours-footnote">Pick any date/time within these hours below — we'll confirm by phone.</p>
+    </div>
+
+    <div class="booking-card">
+      <h3 class="section-eyebrow">Your Details</h3>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <label>Full Name</label>
+        {{ form.customer_name }}{{ form.customer_name.errors }}
+
+        <label>Phone Number</label>
+        {{ form.customer_phone }}{{ form.customer_phone.errors }}
+
+        <div class="form-row">
+          <div>
+            <label>Party Size</label>
+            {{ form.party_size }}{{ form.party_size.errors }}
+          </div>
+          <div>
+            <label>Date</label>
+            {{ form.booking_date }}{{ form.booking_date.errors }}
+          </div>
+          <div>
+            <label>Time</label>
+            {{ form.booking_time }}{{ form.booking_time.errors }}
+          </div>
+        </div>
+
+        <label>Notes (optional)</label>
+        {{ form.notes }}
+
+        <button type="submit" class="btn btn-block tilt-btn">Book Your Corner →</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

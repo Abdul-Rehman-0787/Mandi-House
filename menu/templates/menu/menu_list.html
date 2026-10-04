@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Our Menu – Mandi House{% endblock %}
+{% block content %}
+<section class="hero hero-small">
+  <p class="eyebrow">02 — The Menu</p>
+  <h1>What's <em>cooking.</em></h1>
+  <p>All prices in AUD ($). Everything below is made fresh, every day.</p>
+</section>
+
+<section class="section container">
+  <div class="chip-row">
+    <a class="chip {% if not selected %}active{% endif %}" href="{% url 'menu:menu_list' %}">All</a>
+    {% for c in all_categories %}
+      <a class="chip {% if selected == c.id|stringformat:'s' %}active{% endif %}" href="?category={{ c.id }}">{{ c.name }}</a>
+    {% endfor %}
+  </div>
+
+  {% for category in categories %}
+    {% if category.dishes.all %}
+      <h3 class="section-eyebrow" style="margin-top:40px;font-size:.95rem;">{{ category.name }}</h3>
+      <div class="grid">
+        {% for dish in category.dishes.all %}
+          {% if dish.is_active %}
+          <div class="card tilt-card">
+            <div class="card-top">
+              <span>{{ category.name|upper }}</span>
+              <span class="num">{{ forloop.counter|stringformat:"02d" }}</span>
+            </div>
+            <div class="card-img">
+              <!-- Placeholder plate graphic — replace with dish.image once real photos are ready -->
+              {% if dish.image %}
+                <img src="{{ dish.image.url }}" alt="{{ dish.name }}" style="height:100%;width:100%;object-fit:cover;">
+              {% else %}
+                <div class="plate-badge"><div class="plate-ring"><div class="plate-inner">
+                  <span style="width:14px;height:14px;top:24px;left:22px;"></span>
+                  <span style="width:18px;height:18px;top:40px;left:52px;"></span>
+                </div></div></div>
+              {% endif %}
+              {% if not dish.is_in_stock %}<span class="badge badge-out" style="position:absolute;top:16px;right:16px;">Sold Out</span>{% endif %}
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">{{ dish.name }}</h3>
+              <p class="card-desc">{{ dish.description|truncatewords:14 }}</p>
+              <div class="price-row">
+                <span><span class="price">${{ dish.final_price }}</span>{% if dish.has_discount %}<span class="price-old">${{ dish.price }}</span> <span class="badge badge-sale">-{{ dish.discount_percent }}%</span>{% endif %}</span>
+              </div>
+              {% if dish.is_in_stock %}
+              <form method="post" action="{% url 'orders:add_to_cart' 'dish' dish.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'menu:menu_list' %}">
+                <button type="submit" class="btn btn-block tilt-btn">Add to Cart</button>
+              </form>
+              {% else %}
+                <button class="btn btn-disabled btn-block" disabled>Sold Out</button>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endfor %}
+</section>
+{% endblock %}

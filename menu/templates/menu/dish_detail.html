@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ dish.name }} – Mandi House{% endblock %}
+{% block content %}
+<section class="section container" style="max-width:760px;">
+  <div class="card tilt-card" style="flex-direction:row;flex-wrap:wrap;">
+    <div class="card-img" style="width:100%;height:280px;">
+      {% if dish.image %}
+        <img src="{{ dish.image.url }}" alt="{{ dish.name }}" style="height:100%;width:100%;object-fit:cover;">
+      {% else %}
+        <div class="plate-badge"><div class="plate-ring"><div class="plate-inner">
+          <span style="width:16px;height:16px;top:26px;left:24px;"></span>
+          <span style="width:22px;height:22px;top:42px;left:54px;"></span>
+        </div></div></div>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      <p class="section-eyebrow" style="margin-bottom:4px;">{{ dish.category.name|upper }}</p>
+      <h1 class="serif" style="margin:0 0 12px;">{{ dish.name }}</h1>
+      <p class="card-desc" style="font-size:1rem;">{{ dish.description }}</p>
+      <div class="price-row">
+        <span class="price" style="font-size:1.6rem;">${{ dish.final_price }}</span>
+        {% if dish.has_discount %}<span class="price-old">${{ dish.price }}</span><span class="badge badge-sale">-{{ dish.discount_percent }}%</span>{% endif %}
+      </div>
+      {% if dish.is_in_stock %}
+      <form method="post" action="{% url 'orders:add_to_cart' 'dish' dish.pk %}" style="display:flex;gap:12px;align-items:center;">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% url 'menu:dish_detail' dish.pk %}">
+        <label style="margin:0;color:var(--cream);">Qty</label>
+        <input type="number" name="quantity" value="1" min="1" class="qty-input">
+        <button type="submit" class="btn tilt-btn">Add to Cart</button>
+      </form>
+      {% else %}
+        <button class="btn btn-disabled" disabled>Sold Out</button>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

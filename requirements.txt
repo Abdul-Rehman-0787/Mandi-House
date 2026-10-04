@@ -1,0 +1,9 @@
+Django==6.1.1
+pillow==12.1.1
+
+# Local-only: lets you run `python manage.py runserver_plus --cert-file adhoc`
+# to test the site over HTTPS on your own machine before you have a real
+# domain/certificate. Not required in production (see README section 7).
+django-extensions==4.1
+Werkzeug==3.1.7
+pyOpenSSL==26.4.0

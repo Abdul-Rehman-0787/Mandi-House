@@ -1,0 +1,27 @@
+{% extends "dashboard/dash_base.html" %}
+{% block title %}Deals – Mandi 1{% endblock %}
+{% block dash_content %}
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+  <h1 style="color:#c94a09;">Deals</h1>
+  <a href="{% url 'dashboard:deal_add' %}" class="btn btn-yellow">➕ Add New Deal</a>
+</div>
+<table class="dash-table">
+  <tr><th>Title</th><th>Price</th><th>Active</th><th>Valid Until</th><th></th></tr>
+  {% for deal in deals %}
+  <tr>
+    <td>{{ deal.title }}</td>
+    <td>${{ deal.deal_price }}</td>
+    <td>{% if deal.is_active %}✅{% else %}🚫{% endif %}</td>
+    <td>{{ deal.valid_until|date:"d M Y H:i"|default:"No end date" }}</td>
+    <td style="display:flex;gap:8px;">
+      <a href="{% url 'dashboard:deal_edit' deal.pk %}" class="btn btn-small">✏️ Edit</a>
+      <form method="post" action="{% url 'dashboard:deal_delete' deal.pk %}" onsubmit="return confirm('Delete this deal?');">
+        {% csrf_token %}<button class="btn btn-small btn-danger">🗑️ Delete</button>
+      </form>
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="5">No deals yet — create your first one!</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

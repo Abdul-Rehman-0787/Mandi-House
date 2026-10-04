@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}My Orders – Mandi 1{% endblock %}
+{% block content %}
+<section class="section container" style="max-width:700px;">
+  <h2 class="section-title">My Orders</h2>
+
+  {% if orders %}
+    <p class="section-sub">Orders placed from this device</p>
+    {% for order in orders %}
+      <div class="cart-item" style="flex-direction:column;align-items:flex-start;">
+        <div style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:8px;">
+          <strong>Order #{{ order.pk }}</strong>
+          <span class="status-pill status-{{ order.status }}">{{ order.get_status_display }}</span>
+        </div>
+        <div style="color:#6b5d4f;">{{ order.created_at|date:"d M Y, H:i" }} · ${{ order.total }} AUD</div>
+        <ul style="margin:6px 0 0;padding-left:18px;color:#6b5d4f;">
+          {% for item in order.items.all %}
+            <li>{{ item.quantity }} x {{ item.item_name }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="section-sub">No orders found on this device yet.</p>
+  {% endif %}
+
+  <div style="background:#fff;padding:20px;border-radius:14px;box-shadow:var(--shadow);margin-top:30px;">
+    <h3 style="margin-top:0;color:#c94a09;">Using a different device?</h3>
+    <p style="color:#6b5d4f;">Look up your order by the phone number you gave us.</p>
+    <form method="get" style="display:flex;gap:10px;flex-wrap:wrap;">
+      <input type="text" name="phone" value="{{ phone }}" placeholder="+61 4xx xxx xxx" class="form-control" style="flex:1;min-width:200px;margin-bottom:0;">
+      <button type="submit" class="btn">Find My Orders</button>
+    </form>
+
+    {% if phone %}
+      {% if phone_lookup_results %}
+        <div style="margin-top:16px;">
+          {% for order in phone_lookup_results %}
+            <div class="cart-item" style="flex-direction:column;align-items:flex-start;">
+              <div style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:8px;">
+                <strong>Order #{{ order.pk }}</strong>
+                <span class="status-pill status-{{ order.status }}">{{ order.get_status_display }}</span>
+              </div>
+              <div style="color:#6b5d4f;">{{ order.created_at|date:"d M Y, H:i" }} · ${{ order.total }} AUD</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="section-sub" style="margin-top:14px;">No orders found for that phone number.</p>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
